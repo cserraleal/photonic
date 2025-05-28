@@ -17,3 +17,9 @@ const TREE_FACTOR = 0.8;
 
 // IVA
 const TAX_RATE = 0.12;
+
+// Panel warranty
+const SYSTEM_LIFETIME_YEARS = 25;
+
+// Cost per kilowatt in quetzales
+const COST_PER_KW = 7500;

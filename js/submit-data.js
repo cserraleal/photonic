@@ -66,34 +66,43 @@ document.addEventListener("DOMContentLoaded", async () => {
       requiredSystemSizeKw *= 1.0;
     }
 
+    // 1. Calculate number of panels and installed power
     const numberOfPanels = calculateNumberOfPanels(requiredSystemSizeKw);
     const installedPowerKw = calculateInstalledPowerKw(numberOfPanels);
     const requiredArea = calculateRequiredAreaM2(numberOfPanels);
+
+    // 2. Calculate generation and environmental impact
     const annualGeneration = calculateAnnualGenerationKwh(numberOfPanels, irradianceValue);
     const coverage = calculateCoveragePercentage(annualGeneration, avgMonthlyConsumption);
-    console.log("Average Monthly Consumption:", avgMonthlyConsumption);
-    console.log("Annual Consumption:", avgMonthlyConsumption * 12);
-    console.log("Annual Generation:", annualGeneration);
-    console.log("Coverage (%):", coverage);
     const co2Saved = calculateAnnualCO2Saved(annualGeneration);
     const treeEquivalents = calculateTreeEquivalents(annualGeneration);
 
-    // 4. Store for charts
-    lastAnnualGeneration = annualGeneration;
-    lastAvgMonthlyConsumption = avgMonthlyConsumption;
-
-    // 4a. Generate realistic monthly consumption data
+    // 3. Generate realistic monthly consumption and calculate bill
     const monthlyConsumptions = generateRealisticMonthlyData(avgMonthlyConsumption * 12, 0.05);
-
-    // 4b. Calculate electricity bills
     const monthlyBills = monthlyConsumptions.map(kwh =>
       calculateMonthlyBill(kwh, distributor, rateType, department)
     );
+    const annualElectricityCost = monthlyBills.reduce((sum, val) => sum + val, 0);
 
-// 4c. Calculate total annual bill
-const annualElectricityCost = monthlyBills.reduce((sum, val) => sum + val, 0);
+    // 4a. Calculate investment and financial metrics
+    const investmentCost = calculateInvestmentCost(installedPowerKw);
+    const paybackYears = investmentCost / annualElectricityCost;
+    const roiPercent = ((annualElectricityCost * SYSTEM_LIFETIME_YEARS - investmentCost) / investmentCost) * 100;
+    
+    // 4b. Construct cash flow array for IRR
+    const cashFlows = [-investmentCost];
+    for (let year = 1; year <= SYSTEM_LIFETIME_YEARS; year++) {
+      cashFlows.push(annualElectricityCost);
+    }
 
-    // 5. Store latestResults for later use
+    // 4v. Calculate Internal Rate of Return (IRR)
+    const irr = calculateIRR(cashFlows);
+
+    // 5a. Store values for charts
+    lastAnnualGeneration = annualGeneration;
+    lastAvgMonthlyConsumption = avgMonthlyConsumption;
+
+    // 5b. Store latestResults for later use
     latestResults = {
       installedPowerKw,
       numberOfPanels,
@@ -104,7 +113,11 @@ const annualElectricityCost = monthlyBills.reduce((sum, val) => sum + val, 0);
       treeEquivalents,
       department,
       averageMonthlyConsumption: avgMonthlyConsumption,
-      annualElectricityCost
+      annualElectricityCost,
+      investmentCost,
+      paybackYears,
+      roiPercent,
+      irr
     };
 
     // 6. Show results section
@@ -122,7 +135,11 @@ const annualElectricityCost = monthlyBills.reduce((sum, val) => sum + val, 0);
       { label: "Coverage (%)", value: coverage.toFixed(2) },
       { label: "CO₂ Saved (kg/year)", value: co2Saved },
       { label: "Tree Equivalents", value: treeEquivalents },
-      { label: "Annual Electricity Bill (Q)", value: annualElectricityCost.toFixed(2) }
+      { label: "Annual Electricity Bill (Q)", value: annualElectricityCost.toFixed(2) },
+      { label: "Investment Cost (Q)", value: investmentCost.toFixed(2) },
+      { label: "Payback Period (years)", value: paybackYears.toFixed(1) },
+      { label: "ROI (%)", value: roiPercent.toFixed(1) },
+      { label: "IRR (TIR %)", value: (irr * 100).toFixed(1) }
     ];
 
     numericResultsList.innerHTML = "";
@@ -136,7 +153,7 @@ const annualElectricityCost = monthlyBills.reduce((sum, val) => sum + val, 0);
     console.log("Results object:", latestResults);
   });
 
-  // Tab switching + delayed chart rendering
+  // 8. Tab switching + delayed chart rendering
   document.querySelectorAll(".tab-button").forEach(button => {
     button.addEventListener("click", async () => {
       document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));

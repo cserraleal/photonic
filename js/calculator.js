@@ -62,3 +62,7 @@ function calculateAnnualCO2Saved(annualGenerationKwh) {
 function calculateTreeEquivalents(annualGenerationKwh) {
   return Math.ceil((annualGenerationKwh * TREE_FACTOR) / 10);
 }
+
+function calculateInvestmentCost(systemSizeKw) {
+  return systemSizeKw * COST_PER_KW;
+}

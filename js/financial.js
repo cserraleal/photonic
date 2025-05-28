@@ -32,3 +32,23 @@ function calculateIRR(cashFlows, guess = 0.1) {
   console.warn("IRR did not converge");
   return null;
 }
+
+/**
+ * Generates cumulative cashflow over the system lifetime.
+ * Year 0 is the investment cost (negative), then each year adds electricity savings.
+ */
+function generateCumulativeCashflow(investmentCost, annualSavings, years = SYSTEM_LIFETIME_YEARS) {
+  const cashflow = [];
+  let cumulative = -investmentCost;
+
+  for (let year = 0; year <= years; year++) {
+    if (year === 0) {
+      cashflow.push({ year, value: cumulative });
+    } else {
+      cumulative += annualSavings;
+      cashflow.push({ year, value: cumulative });
+    }
+  }
+
+  return cashflow;
+}

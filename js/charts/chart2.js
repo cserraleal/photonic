@@ -21,7 +21,7 @@ async function renderChart2() {
   // Generate cashflow data
   const data = generateCumulativeCashflow(investmentCost, annualElectricityCost);
 
-  const labels = data.map(item => `Year ${item.year}`);
+  const labels = data.map(item => `${item.year}`);
   const values = data.map(item => item.value.toFixed(2));
 
   chart2Instance = new Chart(ctx, {
@@ -64,6 +64,14 @@ async function renderChart2() {
             callback: function (value) {
               return `Q ${value}`;
             }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: "#0B284C",
+            font: { weight: 'bold' }
           }
         }
       }

@@ -1,24 +1,14 @@
 // charts.js
 
-let generationChartInstance = null;
+let chart1Instance = null; // previously generationChartInstance
 
-/**
- * Renders a bar chart comparing estimated generation vs. consumption.
- * Uses monthly irradiance data per department for realistic generation values.
- * 
- * @param {number} numberOfPanels
- * @param {number} panelPower - in kW
- * @param {number} efficiency - decimal (e.g. 0.789)
- * @param {number} averageMonthlyConsumption - kWh
- * @param {string} department
- */
-async function renderGenerationChart(numberOfPanels, panelPower, efficiency, averageMonthlyConsumption, department) {
-  const ctx = document.getElementById("generationChart").getContext("2d");
+async function renderChart1_Generation(numberOfPanels, panelPower, efficiency, averageMonthlyConsumption, department) {
+  const ctx = document.getElementById("chart1").getContext("2d");
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  // 1. Load monthly irradiance data from file
+  // 1. Load irradiance
   let monthlyIrradiance = [];
   try {
     const response = await fetch("data/irradiance_monthly.json");
@@ -33,20 +23,18 @@ async function renderGenerationChart(numberOfPanels, panelPower, efficiency, ave
     return;
   }
 
-  // 2. Calculate monthly generation based on actual values
+  // 2. Generate data
   const generationData = generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, monthlyIrradiance);
-
-  // 3. Create consumption data (same every month for now)
   const annualConsumption = averageMonthlyConsumption * 12;
   const consumptionData = generateRealisticMonthlyData(annualConsumption, 0.05);
 
-  // 4. Destroy previous chart instance if exists
-  if (generationChartInstance) {
-    generationChartInstance.destroy();
+  // 3. Clear previous chart
+  if (chart1Instance) {
+    chart1Instance.destroy();
   }
 
-  // 5. Create new chart
-  generationChartInstance = new Chart(ctx, {
+  // 4. Render new chart
+  chart1Instance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: months,
@@ -65,25 +53,18 @@ async function renderGenerationChart(numberOfPanels, panelPower, efficiency, ave
     },
     options: {
       responsive: true,
-      animation: {
-        duration: 1000
-      },
+      animation: { duration: 1000 },
       scales: {
         y: {
           beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Energy (kWh)'
-          }
+          title: { display: true, text: 'Energy (kWh)' }
         }
       },
       plugins: {
         legend: {
           labels: {
             color: "#0B284C",
-            font: {
-              weight: 'bold'
-            }
+            font: { weight: 'bold' }
           }
         }
       }

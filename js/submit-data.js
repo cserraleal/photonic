@@ -117,13 +117,16 @@ document.addEventListener("DOMContentLoaded", () => {
       tabContent.classList.add("active");
 
       if (tabId === "charts" && latestResults) {
-        await renderGenerationChart(
-          latestResults.numberOfPanels,
-          PANEL_POWER_KW,
-          SYSTEM_EFFICIENCY,
-          latestResults.averageMonthlyConsumption,
-          latestResults.department
-        );
+        const activeChart = document.querySelector(".chart-tab-button.active")?.dataset.chart;
+        if (activeChart === "chart1") {
+          await renderChart1_Generation(
+            latestResults.numberOfPanels,
+            PANEL_POWER_KW,
+            SYSTEM_EFFICIENCY,
+            latestResults.averageMonthlyConsumption,
+            latestResults.department
+          );
+        }
       }
     });
   });

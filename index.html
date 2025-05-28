@@ -113,9 +113,46 @@
 
       <!-- Tab 2: Visual Charts -->
       <div class="tab-content" id="tab-charts">
-        <canvas id="generationChart" width="600" height="300" style="max-width: 100%;"></canvas>
+
+        <!-- Chart Switcher Buttons -->
+        <div class="chart-switcher">
+          <button class="chart-tab-button active" data-chart="chart1">Chart 1</button>
+          <button class="chart-tab-button" data-chart="chart2">Chart 2</button>
+          <button class="chart-tab-button" data-chart="chart3">Chart 3</button>
+        </div>
+      
+        <!-- Chart Containers (one shown at a time) -->
+        <div class="chart-container">
+          <div id="chart1Box" class="chart-box">
+            <canvas id="chart1" width="600" height="300" style="max-width: 100%;"></canvas>
+          </div>
+          <div id="chart2Box" class="chart-box" style="display: none;"> [Chart 2 Placeholder]
+          </div>
+          <div id="chart3Box" class="chart-box" style="display: none;"> [Chart 3 Placeholder]
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    document.querySelectorAll(".chart-tab-button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Remove active class from all buttons
+        document.querySelectorAll(".chart-tab-button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+  
+        // Hide all chart boxes
+        document.querySelectorAll(".chart-box").forEach(box => box.style.display = "none");
+  
+        // Show the selected chart box
+        const chartId = btn.dataset.chart + "Box";
+        const target = document.getElementById(chartId);
+        if (target) {
+          target.style.display = "flex";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
+

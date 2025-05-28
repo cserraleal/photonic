@@ -1,14 +1,16 @@
-// charts.js
+// chart1.js
 
-let chart1Instance = null; // previously generationChartInstance
+let chart1Instance = null;
 
-async function renderChart1_Generation(numberOfPanels, panelPower, efficiency, averageMonthlyConsumption, department) {
+/**
+ * Core logic that renders the chart.
+ */
+async function drawChart1(numberOfPanels, panelPower, efficiency, averageMonthlyConsumption, department) {
   const ctx = document.getElementById("chart1").getContext("2d");
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  // 1. Load irradiance
   let monthlyIrradiance = [];
   try {
     const response = await fetch("data/irradiance_monthly.json");
@@ -23,17 +25,14 @@ async function renderChart1_Generation(numberOfPanels, panelPower, efficiency, a
     return;
   }
 
-  // 2. Generate data
   const generationData = generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, monthlyIrradiance);
   const annualConsumption = averageMonthlyConsumption * 12;
   const consumptionData = generateRealisticMonthlyData(annualConsumption, 0.05);
 
-  // 3. Clear previous chart
   if (chart1Instance) {
     chart1Instance.destroy();
   }
 
-  // 4. Render new chart
   chart1Instance = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -71,3 +70,16 @@ async function renderChart1_Generation(numberOfPanels, panelPower, efficiency, a
     }
   });
 }
+
+/**
+ * Global function exposed to chart-switcher.
+ */
+window.renderChart1 = async function () {
+  await drawChart1(
+    latestResults.numberOfPanels,
+    PANEL_POWER_KW,
+    SYSTEM_EFFICIENCY,
+    latestResults.averageMonthlyConsumption,
+    latestResults.department
+  );
+};

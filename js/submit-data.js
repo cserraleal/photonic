@@ -4,7 +4,23 @@ let lastAnnualGeneration = 0;
 let lastAvgMonthlyConsumption = 0;
 let latestResults = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  //  STEP: Load pricing data on startup
+  async function loadElectricityPricing() {
+    try {
+      const response = await fetch("data/pricing.json");
+      window.electricityPricing = await response.json();
+      console.log("Electricity pricing loaded:", window.electricityPricing);
+    } catch (error) {
+      console.error("Failed to load pricing data:", error);
+      alert("Error loading electricity pricing configuration.");
+    }
+  }
+
+  //  CALL THE LOADER HERE
+  await loadElectricityPricing();
+
   const form = document.getElementById("solarForm");
   const numericResultsList = document.getElementById("numericResults");
   const resultsSection = document.getElementById("resultsSection");
@@ -21,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const month4 = parseFloat(formData.month4);
     const department = formData.department;
     const sizingPreference = formData.sizingPreference;
+    const distributor = formData.distributor;
+    const rateType = formData.rateType;
 
     // 2. Load irradiance from JSON
     let irradianceValue = 0;
@@ -64,6 +82,17 @@ document.addEventListener("DOMContentLoaded", () => {
     lastAnnualGeneration = annualGeneration;
     lastAvgMonthlyConsumption = avgMonthlyConsumption;
 
+    // 4a. Generate realistic monthly consumption data
+    const monthlyConsumptions = generateRealisticMonthlyData(avgMonthlyConsumption * 12, 0.05);
+
+    // 4b. Calculate electricity bills
+    const monthlyBills = monthlyConsumptions.map(kwh =>
+      calculateMonthlyBill(kwh, distributor, rateType, department)
+    );
+
+// 4c. Calculate total annual bill
+const annualElectricityCost = monthlyBills.reduce((sum, val) => sum + val, 0);
+
     // 5. Store latestResults for later use
     latestResults = {
       installedPowerKw,
@@ -74,7 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
       co2Saved,
       treeEquivalents,
       department,
-      averageMonthlyConsumption: avgMonthlyConsumption
+      averageMonthlyConsumption: avgMonthlyConsumption,
+      annualElectricityCost
     };
 
     // 6. Show results section
@@ -91,7 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
       { label: "Annual Generation (kWh)", value: annualGeneration.toFixed(2) },
       { label: "Coverage (%)", value: coverage.toFixed(2) },
       { label: "CO₂ Saved (kg/year)", value: co2Saved },
-      { label: "Tree Equivalents", value: treeEquivalents }
+      { label: "Tree Equivalents", value: treeEquivalents },
+      { label: "Annual Electricity Bill (Q)", value: annualElectricityCost.toFixed(2) }
     ];
 
     numericResultsList.innerHTML = "";
@@ -118,14 +149,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (tabId === "charts" && latestResults) {
         const activeChart = document.querySelector(".chart-tab-button.active")?.dataset.chart;
-        if (activeChart === "chart1") {
-          await renderChart1_Generation(
-            latestResults.numberOfPanels,
-            PANEL_POWER_KW,
-            SYSTEM_EFFICIENCY,
-            latestResults.averageMonthlyConsumption,
-            latestResults.department
-          );
+        const renderFunction = window[`render${activeChart.charAt(0).toUpperCase() + activeChart.slice(1)}`];
+        if (typeof renderFunction === "function") {
+          await renderFunction();
         }
       }
     });

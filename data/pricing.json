@@ -1,0 +1,54 @@
+{
+  "EGGSA": {
+    "BT": {
+      "Guatemala": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.419,
+        "municipalityFee": 0.13
+      },
+      "Escuintla": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.419,
+        "municipalityFee": 0.10
+      }
+    },
+    "BTS": {
+      "Guatemala": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.509,
+        "municipalityFee": 0.13
+      },
+      "Escuintla": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.509,
+        "municipalityFee": 0.10
+      }
+    }
+  },
+  "DEOCSA": {
+    "BT": {
+      "Guatemala": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.419,
+        "municipalityFee": 0.13
+      },
+      "Escuintla": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.419,
+        "municipalityFee": 0.00
+      }
+    },
+    "BTS": {
+      "Guatemala": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.509,
+        "municipalityFee": 0.13
+      },
+      "Escuintla": {
+        "fixedCharge": 11.198,
+        "pricePerKwh": 1.509,
+        "municipalityFee": 0.00
+      }
+    }
+  }
+}

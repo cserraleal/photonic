@@ -15,8 +15,12 @@
   <script defer src="js/constants.js"></script>
   <script defer src="js/form-handler.js"></script>
   <script defer src="js/calculator.js"></script>
-  <script defer src="js/charts.js"></script>
+  <script defer src="js/charts/chart1.js"></script>
+  <script defer src="js/charts/chart2.js"></script>
+  <script defer src="js/charts/chart3.js"></script>
+  <script defer src="js/chart-switcher.js"></script>
   <script defer src="js/plot-data-generator.js"></script>
+  <script defer src="js/bill-calculator.js"></script>
   <script defer src="js/submit-data.js"></script>
 </head>
 <body>
@@ -134,25 +138,6 @@
       </div>
     </div>
   </div>
-  <script>
-    document.querySelectorAll(".chart-tab-button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        // Remove active class from all buttons
-        document.querySelectorAll(".chart-tab-button").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-  
-        // Hide all chart boxes
-        document.querySelectorAll(".chart-box").forEach(box => box.style.display = "none");
-  
-        // Show the selected chart box
-        const chartId = btn.dataset.chart + "Box";
-        const target = document.getElementById(chartId);
-        if (target) {
-          target.style.display = "flex";
-        }
-      });
-    });
-  </script>
 </body>
 </html>
 

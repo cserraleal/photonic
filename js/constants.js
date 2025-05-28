@@ -14,3 +14,6 @@ const CO2_SAVED_PER_KWH = 0.5;
 
 // Trees offset per 10 kg of CO2 saved (adjusted with 0.8 factor)
 const TREE_FACTOR = 0.8;
+
+// IVA
+const TAX_RATE = 0.12;

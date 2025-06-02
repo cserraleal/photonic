@@ -58,3 +58,112 @@ function generateRealisticAnnualData(baseValue, years, variation = 0.05) {
 
   return annualValues;
 }
+
+/**
+ * Generates data for the annual cost comparison chart using monthly generation.
+ * @param {number} annualConsumptionKwh - Annual user consumption in kWh.
+ * @param {string} distributor - e.g., "EGGSA".
+ * @param {string} rateType - e.g., "BT".
+ * @param {string} department - e.g., "Guatemala".
+ * @param {number} annualGenerationKwh - Annual solar generation in kWh.
+ * @param {number} numberOfPanels
+ * @param {number} panelPower - in kW
+ * @param {number} efficiency - decimal (e.g. 0.789)
+ * @param {number[]} monthlyIrradiance - 12 values in kWh/m²/day
+ * @returns {object} - { annualCostWithoutSolar, annualCostWithSolar, annualSavings }
+ */
+function generateAnnualCostComparisonData(
+  annualConsumptionKwh,
+  distributor,
+  rateType,
+  department,
+  annualGenerationKwh,
+  numberOfPanels,
+  panelPower,
+  efficiency,
+  monthlyIrradiance
+) {
+  console.log("Generating cost comparison data:");
+  console.log("Annual Consumption (kWh):", annualConsumptionKwh);
+  console.log("Distributor:", distributor);
+  console.log("Rate Type:", rateType);
+  console.log("Department:", department);
+  console.log("Annual Generation (kWh):", annualGenerationKwh);
+
+  if (
+    isNaN(annualConsumptionKwh) ||
+    !distributor ||
+    !rateType ||
+    !department ||
+    isNaN(annualGenerationKwh) ||
+    !monthlyIrradiance ||
+    monthlyIrradiance.length !== 12
+  ) {
+    console.warn("Missing or invalid inputs. Skipping calculation.");
+    return {
+      annualCostWithoutSolar: 0,
+      annualCostWithSolar: 0,
+      annualSavings: 0
+    };
+  }
+
+  // Generate realistic monthly consumption (±5% variation)
+  const monthlyConsumptions = generateRealisticMonthlyData(annualConsumptionKwh, 0.05);
+
+  // Calculate monthly bills without solar
+  const monthlyBillsWithoutSolar = monthlyConsumptions.map(monthlyKwh => {
+    const bill = calculateMonthlyBill(
+      monthlyKwh,
+      distributor,
+      rateType,
+      department
+    );
+    if (isNaN(bill)) {
+      console.warn("calculateMonthlyBill returned NaN for monthlyKwh:", monthlyKwh);
+      return 0;
+    }
+    return bill;
+  });
+
+  const annualCostWithoutSolar = monthlyBillsWithoutSolar.reduce((sum, val) => sum + val, 0);
+
+  // Calculate monthly generation using monthly irradiance
+  const monthlyGeneration = generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, monthlyIrradiance);
+
+  // Calculate net consumption per month
+  const netMonthlyConsumptions = monthlyConsumptions.map((consumption, index) => {
+    const net = consumption - monthlyGeneration[index];
+    return Math.max(net, 0);
+  });
+
+  // Calculate monthly bills with solar
+  const monthlyBillsWithSolar = netMonthlyConsumptions.map(monthlyKwh => {
+    const bill = calculateMonthlyBill(
+      monthlyKwh,
+      distributor,
+      rateType,
+      department
+    );
+    if (isNaN(bill)) {
+      console.warn("calculateMonthlyBill returned NaN for netMonthlyKwh:", monthlyKwh);
+      return 0;
+    }
+    return bill;
+  });
+
+  const annualCostWithSolar = monthlyBillsWithSolar.reduce((sum, val) => sum + val, 0);
+
+  const annualSavings = annualCostWithoutSolar - annualCostWithSolar;
+
+  console.log("Annual Cost Without Solar:", annualCostWithoutSolar);
+  console.log("Annual Cost With Solar:", annualCostWithSolar);
+  console.log("Annual Savings:", annualSavings);
+
+  return {
+    annualCostWithoutSolar: parseFloat(annualCostWithoutSolar.toFixed(2)),
+    annualCostWithSolar: parseFloat(annualCostWithSolar.toFixed(2)),
+    annualSavings: parseFloat(annualSavings.toFixed(2))
+  };
+}
+
+

@@ -117,7 +117,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       investmentCost,
       paybackYears,
       roiPercent,
-      irr
+      irr,
+      distributor,
+      rateType
     };
 
     // 6. Show results section

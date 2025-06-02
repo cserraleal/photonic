@@ -40,3 +40,21 @@ function generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, month
     return parseFloat(generation.toFixed(2));
   });
 }
+
+/**
+ * Generates realistic annual data with small variation.
+ * @param {number} baseValue - The base annual value (generation or consumption).
+ * @param {number} years - Number of years to generate.
+ * @param {number} variation - e.g. 0.05 for ±5%
+ * @returns {number[]} - Array of annual values with realistic variation.
+ */
+function generateRealisticAnnualData(baseValue, years, variation = 0.05) {
+  let annualValues = [];
+
+  for (let i = 0; i < years; i++) {
+    const randFactor = 1 + (Math.random() * 2 - 1) * variation;
+    annualValues.push(parseFloat((baseValue * randFactor).toFixed(2)));
+  }
+
+  return annualValues;
+}

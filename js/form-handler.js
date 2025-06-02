@@ -1,5 +1,21 @@
 // form-handler.js
 
+/**
+ * @file form-handler.js
+ * @description
+ * Manages the multi-step form logic, including navigation between steps,
+ * validation of required fields, and initial population of the department dropdown.
+ * The form submission itself is handled externally in submit-data.js.
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
+ */
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("solarForm");
   const steps = Array.from(document.querySelectorAll(".form-step"));
@@ -10,16 +26,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let currentStep = 0;
 
-  // Show only the current step
+  /**
+   * @function showStep
+   * @description
+   * Shows the specified step in the multi-step form and hides others.
+   *
+   * @param {number} stepIndex - The index of the step to show.
+   */
   function showStep(stepIndex) {
     steps.forEach((step, index) => {
       step.style.display = index === stepIndex ? "flex" : "none";
     });
   }
 
-  showStep(currentStep); // Initial step
+  showStep(currentStep); // Show initial step
 
-  // Next button click
+  // STEP: Next button click handler
   nextBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       if (validateStep(currentStep)) {
@@ -29,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Previous button click
+  // STEP: Previous button click handler
   prevBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       currentStep--;
@@ -37,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Form submission
+  // STEP: Form submission handler
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     if (validateStep(currentStep)) {
@@ -45,7 +67,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Validate required fields in current step
+  /**
+   * @function validateStep
+   * @description
+   * Validates required fields in the current step.
+   * Highlights empty fields with a red border.
+   *
+   * @param {number} stepIndex - The index of the step to validate.
+   *
+   * @returns {boolean} Whether the step is valid.
+   */
   function validateStep(stepIndex) {
     const inputs = steps[stepIndex].querySelectorAll("input, select");
     for (let input of inputs) {
@@ -60,12 +91,21 @@ document.addEventListener("DOMContentLoaded", function () {
     return true;
   }
 
-  // This will be overwritten by submit-data.js
+  /**
+   * @function handleSubmit
+   * @description
+   * Placeholder function that will be overwritten by submit-data.js.
+   */
   function handleSubmit() {
     console.log("Handled in submit-data.js");
   }
 
-  // Load departments into dropdown
+  /**
+   * @function populateDepartmentDropdown
+   * @description
+   * Populates the department dropdown with data from the irradiance.json file.
+   * Handles asynchronous fetch and dynamic option population.
+   */
   async function populateDepartmentDropdown() {
     try {
       const response = await fetch("data/irradiance.json");
@@ -81,5 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // STEP: Load departments dropdown on initial load
   populateDepartmentDropdown();
 });

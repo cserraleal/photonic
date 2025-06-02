@@ -1,12 +1,35 @@
 // submit-data.js
 
+/**
+ * @file submit-data.js
+ * @description
+ * Handles the main solar calculator form submission, including data collection,
+ * fetching irradiance data, performing all core calculations (generation, consumption,
+ * costs, financial metrics), and rendering the numeric results.
+ * Also manages tab switching and chart rendering.
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
+ */
+
+// Variables to store key results
 let lastAnnualGeneration = 0;
 let lastAvgMonthlyConsumption = 0;
 let latestResults = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-
   // STEP 1: Load pricing data on startup
+  /**
+   * @function loadElectricityPricing
+   * @description
+   * Fetches the pricing data JSON file and stores it globally.
+   */
   async function loadElectricityPricing() {
     try {
       const response = await fetch("data/pricing.json");
@@ -83,8 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       requiredSystemSizeKw *= 0.8;
     } else if (sizingPreference === "maximum") {
       requiredSystemSizeKw *= 1.2;
-    } else {
-      requiredSystemSizeKw *= 1.0; // balanced
     }
 
     // STEP 9: Calculate system components
@@ -104,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     const realisticAnnualGeneration = realisticMonthlyGeneration.reduce((sum, val) => sum + val, 0);
 
-    // STEP 12: Calculate coverage using realistic annual generation and consumption
+    // STEP 12: Calculate coverage
     const coverage = calculateCoveragePercentage(
       realisticAnnualGeneration,
       realisticAverageMonthlyConsumption,
@@ -142,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       installedPowerKw,
       numberOfPanels,
       requiredArea,
-      annualGeneration, // keep for reference
+      annualGeneration, // Keep for reference
       realisticMonthlyGeneration,
       realisticAnnualGeneration,
       coverage,

@@ -1,9 +1,24 @@
 // plot-data-generator.js
 
 /**
- * Generates 12 slightly varied monthly values that sum up to the total
- * @param {number} totalAnnualValue
- * @param {number} variation - e.g. 0.05 for ±5%
+ * @function generateRealisticMonthlyData
+ * @description
+ * Generates 12 slightly varied monthly values that sum up to the total annual value.
+ * Adds realistic variation using a random factor to simulate real-world fluctuations.
+ *
+ * @param {number} totalAnnualValue - The total annual value to distribute.
+ * @param {number} [variation=0.05] - The percentage variation (e.g. 0.05 for ±5%).
+ *
+ * @returns {number[]} An array of 12 monthly values.
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
  */
 function generateRealisticMonthlyData(totalAnnualValue, variation = 0.05) {
   const months = 12;
@@ -16,7 +31,7 @@ function generateRealisticMonthlyData(totalAnnualValue, variation = 0.05) {
     monthlyValues.push(base * randFactor);
   }
 
-  // Normalize to ensure the sum matches original total
+  // Normalize to ensure the sum matches the original total
   const sum = monthlyValues.reduce((acc, val) => acc + val, 0);
   const scale = totalAnnualValue / sum;
   monthlyValues = monthlyValues.map(val => parseFloat((val * scale).toFixed(2)));
@@ -25,12 +40,25 @@ function generateRealisticMonthlyData(totalAnnualValue, variation = 0.05) {
 }
 
 /**
+ * @function generateMonthlyGeneration
+ * @description
  * Generates monthly generation values using real irradiance data per month.
- * @param {number} numberOfPanels
- * @param {number} panelPower - in kW
- * @param {number} efficiency - decimal (e.g. 0.789)
- * @param {number[]} monthlyIrradiance - 12 values in kWh/m²/day
- * @returns {number[]} - 12 monthly generation values in kWh
+ *
+ * @param {number} numberOfPanels - Number of installed panels.
+ * @param {number} panelPower - Panel power in kW.
+ * @param {number} efficiency - System efficiency as a decimal (e.g. 0.789).
+ * @param {number[]} monthlyIrradiance - 12 values in kWh/m²/day.
+ *
+ * @returns {number[]} An array of 12 monthly generation values in kWh.
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
  */
 function generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, monthlyIrradiance) {
   const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -42,11 +70,24 @@ function generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, month
 }
 
 /**
- * Generates realistic annual data with small variation.
+ * @function generateRealisticAnnualData
+ * @description
+ * Generates an array of annual data with small variations to simulate real-world changes over time.
+ *
  * @param {number} baseValue - The base annual value (generation or consumption).
- * @param {number} years - Number of years to generate.
- * @param {number} variation - e.g. 0.05 for ±5%
- * @returns {number[]} - Array of annual values with realistic variation.
+ * @param {number} years - The number of years to generate.
+ * @param {number} [variation=0.05] - The percentage variation (e.g. 0.05 for ±5%).
+ *
+ * @returns {number[]} An array of annual values with realistic variation.
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
  */
 function generateRealisticAnnualData(baseValue, years, variation = 0.05) {
   let annualValues = [];
@@ -60,13 +101,31 @@ function generateRealisticAnnualData(baseValue, years, variation = 0.05) {
 }
 
 /**
+ * @function generateAnnualCostComparisonData
+ * @description
  * Generates data for the annual cost comparison chart using realistic monthly data.
+ * Calculates costs with and without solar by comparing net monthly consumption
+ * and applying utility rates and fees.
+ *
  * @param {number[]} monthlyConsumptions - Realistic monthly consumption in kWh.
- * @param {string} distributor - e.g., "EGGSA".
- * @param {string} rateType - e.g., "BT".
- * @param {string} department - e.g., "Guatemala".
+ * @param {string} distributor - The electricity distributor (e.g., "EGGSA").
+ * @param {string} rateType - The rate type (e.g., "BT").
+ * @param {string} department - The department/region (e.g., "Guatemala").
  * @param {number[]} monthlyGeneration - Realistic monthly generation in kWh.
- * @returns {object} - { annualCostWithoutSolar, annualCostWithSolar, annualSavings }
+ *
+ * @returns {object} An object containing:
+ *  - {number} annualCostWithoutSolar: The total annual cost without solar panels (Q).
+ *  - {number} annualCostWithSolar: The total annual cost with solar panels (Q).
+ *  - {number} annualSavings: The total annual savings achieved by solar panels (Q).
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
  */
 function generateAnnualCostComparisonData(
   monthlyConsumptions,
@@ -99,7 +158,7 @@ function generateAnnualCostComparisonData(
 
   const annualCostWithoutSolar = monthlyBillsWithoutSolar.reduce((sum, val) => sum + val, 0);
 
-  // Calculate net consumption per month
+  // Calculate net consumption per month (consumption - solar generation)
   const netMonthlyConsumptions = monthlyConsumptions.map((consumption, index) => {
     const net = consumption - monthlyGeneration[index];
     return Math.max(net, 0);

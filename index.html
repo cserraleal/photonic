@@ -11,7 +11,7 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Scripts (load Chart.js first, then yours) -->
+  <!-- Scripts (load Chart.js first, then custom scripts) -->
   <script defer src="js/constants.js"></script>
   <script defer src="js/form-handler.js"></script>
   <script defer src="js/calculator.js"></script>
@@ -30,6 +30,7 @@
     <form id="solarForm">
 
       <!-- Step 1: Energy Consumption -->
+      <!-- Collects user data on monthly consumption and preferences -->
       <div class="form-step" data-step="1">
         <h2>Energy Consumption</h2>
         <label>Month 1 (kWh): <input type="number" name="month1" required /></label>
@@ -69,6 +70,7 @@
       </div>
 
       <!-- Step 2: Service Info -->
+      <!-- Collects user data on service information -->
       <div class="form-step" data-step="2" style="display: none;">
         <h2>Service Info</h2>
         <label>Counter Number: <input type="text" name="counterNumber" required /></label>
@@ -85,6 +87,7 @@
       </div>
 
       <!-- Step 3: Personal Info -->
+      <!-- Collects user personal details -->
       <div class="form-step" data-step="3" style="display: none;">
         <h2>Personal Info</h2>
         <label>Name: <input type="text" name="firstName" required /></label>
@@ -102,10 +105,12 @@
     </form>
 
     <!-- Results Section -->
+    <!-- Displays numeric and chart results -->
     <div id="resultsSection" style="display: none;">
       <h2>Results</h2>
 
       <!-- Tab Navigation -->
+      <!-- Toggle between numeric results and charts -->
       <div class="tabs">
         <button class="tab-button active" data-tab="numeric">Numeric Values</button>
         <button class="tab-button" data-tab="charts">Visual Summary</button>
@@ -120,12 +125,13 @@
       <div class="tab-content" id="tab-charts">
 
         <!-- Chart Switcher Buttons -->
+        <!-- Allows user to switch between charts -->
         <div class="chart-switcher">
           <button class="chart-tab-button active" data-chart="chart1">Chart 1</button>
           <button class="chart-tab-button" data-chart="chart2">Chart 2</button>
           <button class="chart-tab-button" data-chart="chart3">Chart 3</button>
         </div>
-      
+
         <!-- Chart Containers (one shown at a time) -->
         <div class="chart-container">
           <div id="chart1Box" class="chart-box">
@@ -143,4 +149,3 @@
   </div>
 </body>
 </html>
-

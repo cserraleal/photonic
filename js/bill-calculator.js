@@ -1,13 +1,31 @@
 // bill-calculator.js
 
 /**
- * Calculates a monthly electricity bill.
- * 
- * @param {number} consumptionKwh - Monthly kWh consumption
- * @param {string} distributor - e.g., "EGGSA"
- * @param {string} rateType - e.g., "BT"
- * @param {string} department - e.g., "Guatemala"
- * @returns {number} monthly bill in Q
+ * @function calculateMonthlyBill
+ * @description
+ * Calculates a monthly electricity bill given the consumption in kWh,
+ * distributor, rate type, and department. Applies fixed charges, variable
+ * rates, municipality fees, and tax rates defined in constants.js.
+ *
+ * @param {number} consumptionKwh - Monthly consumption in kWh.
+ * @param {string} distributor - The electricity distributor (e.g., "EGGSA").
+ * @param {string} rateType - The rate type (e.g., "BT").
+ * @param {string} department - The department/region (e.g., "Guatemala").
+ *
+ * @returns {number} The monthly bill amount in Q.
+ *
+ * @author
+ * Cristobal Serra
+ *
+ * @company
+ * Siempre Energy
+ *
+ * @version
+ * 1.0.0
+ *
+ * @example
+ * const bill = calculateMonthlyBill(400, 'EGGSA', 'BT', 'Guatemala');
+ * console.log(bill); // prints calculated bill
  */
 function calculateMonthlyBill(consumptionKwh, distributor, rateType, department) {
   if (
@@ -25,7 +43,8 @@ function calculateMonthlyBill(consumptionKwh, distributor, rateType, department)
 
   const subtotal = fixedCharge + (consumptionKwh * pricePerKwh);
   const withMunicipality = subtotal * (1 + municipalityFee);
-  const withTax = withMunicipality * (1 + TAX_RATE); // Now uses constant from constants.js
+  const withTax = withMunicipality * (1 + TAX_RATE); // Tax constant from constants.js
 
   return withTax;
 }
+

@@ -1,6 +1,11 @@
-/* -------------------------
+/* ==========================================================================
    GLOBAL STYLES
-------------------------- */
+   @author: Cristobal Serra
+   @company: Siempre Energy
+   @description:
+   Sets base font, colors, and layout for the entire application.
+   ==========================================================================
+*/
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #ffffff;
@@ -13,9 +18,14 @@ body {
   font-size: 18px; /* Increased font size */
 }
 
-/* -------------------------
+/* ==========================================================================
    CONTAINER STYLES
-------------------------- */
+   @author: Cristobal Serra
+   @company: Siempre Energy
+   @description:
+   Container for the main calculator application.
+   ==========================================================================
+*/
 .calculator-container {
   width: 90%;
   max-width: 1000px; /* Increased width */
@@ -26,9 +36,12 @@ body {
   padding: 40px;
 }
 
-/* -------------------------
+/* ==========================================================================
    FORM STEPS
-------------------------- */
+   @description:
+   Styles for each step of the multi-step form.
+   ==========================================================================
+*/
 .form-step {
   display: flex;
   flex-direction: column;
@@ -57,9 +70,12 @@ select {
   margin-top: 5px;
 }
 
-/* -------------------------
+/* ==========================================================================
    BUTTON STYLES
-------------------------- */
+   @description:
+   Styles for form and navigation buttons.
+   ==========================================================================
+*/
 button {
   background-color: #FFBF41;
   color: #0B284C;
@@ -81,9 +97,12 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* -------------------------
+/* ==========================================================================
    FORM NAVIGATION BUTTON LAYOUT
-------------------------- */
+   @description:
+   Alignment for navigation buttons and calculate button in the form.
+   ==========================================================================
+*/
 .form-navigation {
   display: flex;
   justify-content: space-between;
@@ -97,9 +116,12 @@ button:disabled {
   display: block;
 }
 
-/* -------------------------
+/* ==========================================================================
    RESULTS SECTION
-------------------------- */
+   @description:
+   Styles for displaying the results section and tabs.
+   ==========================================================================
+*/
 #resultsSection {
   margin-top: 40px;
 }
@@ -150,19 +172,23 @@ button:disabled {
   font-size: 18px;
 }
 
-/* -------------------------
+/* ==========================================================================
    CHART STYLES
-------------------------- */
-
+   @description:
+   Styles for Chart.js canvas.
+   ==========================================================================
+*/
 canvas {
   width: 100% !important;
   height: 500px !important;
 }
 
-/* -------------------------
+/* ==========================================================================
    CHART SWITCHER STYLES
-------------------------- */
-
+   @description:
+   Styles for switching between different charts.
+   ==========================================================================
+*/
 .chart-switcher {
   display: flex;
   justify-content: center;
@@ -191,10 +217,12 @@ canvas {
   background-color: #dcdcdc;
 }
 
-/* -------------------------
+/* ==========================================================================
    CHART CONTAINER BOXES
-------------------------- */
-
+   @description:
+   Styles for containing and displaying charts.
+   ==========================================================================
+*/
 .chart-container {
   min-height: 400px;
   height: 500px;
@@ -216,7 +244,6 @@ canvas {
   background-color: #ffffff;
   border-radius: 10px;
   border: 1px dashed #ccc;
-
   display: flex;
   align-items: center;
   justify-content: center;

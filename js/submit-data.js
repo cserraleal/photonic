@@ -73,12 +73,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 2. Calculate generation and environmental impact
     const annualGeneration = calculateAnnualGenerationKwh(numberOfPanels, irradianceValue);
-    const coverage = calculateCoveragePercentage(annualGeneration, avgMonthlyConsumption);
+    const monthlyConsumptions = generateRealisticMonthlyData(avgMonthlyConsumption * 12, 0.05);
+    const annualConsumption = monthlyConsumptions.reduce((sum, val) => sum + val, 0);
+    const averageAnnualConsumption = annualConsumption / 12;
+
+    const coverage = calculateCoveragePercentage(annualGeneration, averageAnnualConsumption, sizingPreference);
     const co2Saved = calculateAnnualCO2Saved(annualGeneration);
     const treeEquivalents = calculateTreeEquivalents(annualGeneration);
 
     // 3. Generate realistic monthly consumption and calculate bill
-    const monthlyConsumptions = generateRealisticMonthlyData(avgMonthlyConsumption * 12, 0.05);
+    
     const monthlyBills = monthlyConsumptions.map(kwh =>
       calculateMonthlyBill(kwh, distributor, rateType, department)
     );

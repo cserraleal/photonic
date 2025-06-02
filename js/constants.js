@@ -4,7 +4,7 @@
 const PANEL_POWER_KW = 0.61;
 
 // Efficiency of the system (adjusted for losses)
-const SYSTEM_EFFICIENCY = 0.789;
+const SYSTEM_EFFICIENCY = 0.780;
 
 // Area occupied by one panel in square meters
 const PANEL_AREA_M2 = 2.7;

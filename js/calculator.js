@@ -45,8 +45,12 @@ function calculateAnnualGenerationKwh(numberOfPanels, annualIrradiance) {
 /**
  * Calculate monthly coverage percentage (capped at 100)
  */
-function calculateCoveragePercentage(annualGenerationKwh, averageMonthlyConsumption) {
-  return (annualGenerationKwh / (averageMonthlyConsumption * 12)) * 100;
+function calculateCoveragePercentage(annualGenerationKwh, averageMonthlyConsumption, sizingPreference) {
+  const coverage = (annualGenerationKwh / (averageMonthlyConsumption * 12)) * 100;
+  if (sizingPreference === "balanced") {
+    return Math.min(coverage, 100);
+  }
+  return coverage;
 }
 
 /**

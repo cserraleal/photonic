@@ -1,5 +1,5 @@
 // submit-data.js
-
+import { saveUserData } from "./db/save-user-data.js";
 /**
  * @file submit-data.js
  * @description
@@ -21,7 +21,7 @@
 // Variables to store key results
 let lastAnnualGeneration = 0;
 let lastAvgMonthlyConsumption = 0;
-let latestResults = null;
+window.latestResults = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   // STEP 1: Load pricing data on startup
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     lastAnnualGeneration = annualGeneration;
     lastAvgMonthlyConsumption = avgMonthlyConsumption;
 
-    latestResults = {
+    window.latestResults = {
       installedPowerKw,
       numberOfPanels,
       requiredArea,
@@ -182,6 +182,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       distributor,
       rateType
     };
+
+    // Save data to db
+    await saveUserData({userInputs: formData,calculatedResults: latestResults});
 
     // STEP 17: Show results section
     form.style.display = "none";

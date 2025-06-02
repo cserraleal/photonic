@@ -11,7 +11,7 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Scripts (load Chart.js first, then custom scripts) -->
+  <!-- Scripts (load Chart.js first, then your scripts) -->
   <script defer src="js/constants.js"></script>
   <script defer src="js/form-handler.js"></script>
   <script defer src="js/calculator.js"></script>
@@ -23,6 +23,7 @@
   <script defer src="js/bill-calculator.js"></script>
   <script defer src="js/financial.js"></script>
   <script defer src="js/submit-data.js"></script>
+  <script defer src="js/help-modal.js"></script>
 </head>
 <body>
   <div class="calculator-container">
@@ -30,9 +31,11 @@
     <form id="solarForm">
 
       <!-- Step 1: Energy Consumption -->
-      <!-- Collects user data on monthly consumption and preferences -->
       <div class="form-step" data-step="1">
-        <h2>Energy Consumption</h2>
+        <h2>
+          Energy Consumption
+          <button type="button" class="help-icon" data-step="1">?</button>
+        </h2>
         <label>Month 1 (kWh): <input type="number" name="month1" required /></label>
         <label>Month 2 (kWh): <input type="number" name="month2" required /></label>
         <label>Month 3 (kWh): <input type="number" name="month3" required /></label>
@@ -70,9 +73,11 @@
       </div>
 
       <!-- Step 2: Service Info -->
-      <!-- Collects user data on service information -->
       <div class="form-step" data-step="2" style="display: none;">
-        <h2>Service Info</h2>
+        <h2>
+          Service Info
+          <button type="button" class="help-icon" data-step="2">?</button>
+        </h2>
         <label>Counter Number: <input type="text" name="counterNumber" required /></label>
         <label>Correlative Number: <input type="text" name="correlativeNumber" required /></label>
         <label>Department:
@@ -87,9 +92,11 @@
       </div>
 
       <!-- Step 3: Personal Info -->
-      <!-- Collects user personal details -->
       <div class="form-step" data-step="3" style="display: none;">
-        <h2>Personal Info</h2>
+        <h2>
+          Personal Info
+          <button type="button" class="help-icon" data-step="3">?</button>
+        </h2>
         <label>Name: <input type="text" name="firstName" required /></label>
         <label>Last Name: <input type="text" name="lastName" required /></label>
         <label>Email: <input type="email" name="email" required /></label>
@@ -105,12 +112,10 @@
     </form>
 
     <!-- Results Section -->
-    <!-- Displays numeric and chart results -->
     <div id="resultsSection" style="display: none;">
       <h2>Results</h2>
 
       <!-- Tab Navigation -->
-      <!-- Toggle between numeric results and charts -->
       <div class="tabs">
         <button class="tab-button active" data-tab="numeric">Numeric Values</button>
         <button class="tab-button" data-tab="charts">Visual Summary</button>
@@ -123,16 +128,14 @@
 
       <!-- Tab 2: Visual Charts -->
       <div class="tab-content" id="tab-charts">
-
         <!-- Chart Switcher Buttons -->
-        <!-- Allows user to switch between charts -->
         <div class="chart-switcher">
           <button class="chart-tab-button active" data-chart="chart1">Chart 1</button>
           <button class="chart-tab-button" data-chart="chart2">Chart 2</button>
           <button class="chart-tab-button" data-chart="chart3">Chart 3</button>
         </div>
 
-        <!-- Chart Containers (one shown at a time) -->
+        <!-- Chart Containers -->
         <div class="chart-container">
           <div id="chart1Box" class="chart-box">
             <canvas id="chart1" width="600" height="300" style="max-width: 100%;"></canvas>
@@ -146,6 +149,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Lightbox Modal for Help Images -->
+    <div id="helpModal" class="help-modal">
+      <div class="help-modal-content">
+        <span class="help-modal-close">&times;</span>
+        <img id="helpModalImage" src="" alt="Help Example" />
+      </div>
+    </div>
   </div>
 </body>
 </html>
+

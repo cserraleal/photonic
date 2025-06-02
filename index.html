@@ -11,6 +11,9 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Database/Firebase -->
+  <script type="module" src="js/db/db-config.js"></script>
+
   <!-- Scripts (load Chart.js first, then your scripts) -->
   <script defer src="js/constants.js"></script>
   <script defer src="js/form-handler.js"></script>
@@ -22,7 +25,8 @@
   <script defer src="js/plot-data-generator.js"></script>
   <script defer src="js/bill-calculator.js"></script>
   <script defer src="js/financial.js"></script>
-  <script defer src="js/submit-data.js"></script>
+  <script type="module" src="js/db/save-user-data.js"></script>
+  <script type="module" defer src="js/submit-data.js"></script>
   <script defer src="js/help-modal.js"></script>
 </head>
 <body>

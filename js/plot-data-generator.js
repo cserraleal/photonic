@@ -60,44 +60,28 @@ function generateRealisticAnnualData(baseValue, years, variation = 0.05) {
 }
 
 /**
- * Generates data for the annual cost comparison chart using monthly generation.
- * @param {number} annualConsumptionKwh - Annual user consumption in kWh.
+ * Generates data for the annual cost comparison chart using realistic monthly data.
+ * @param {number[]} monthlyConsumptions - Realistic monthly consumption in kWh.
  * @param {string} distributor - e.g., "EGGSA".
  * @param {string} rateType - e.g., "BT".
  * @param {string} department - e.g., "Guatemala".
- * @param {number} annualGenerationKwh - Annual solar generation in kWh.
- * @param {number} numberOfPanels
- * @param {number} panelPower - in kW
- * @param {number} efficiency - decimal (e.g. 0.789)
- * @param {number[]} monthlyIrradiance - 12 values in kWh/m²/day
+ * @param {number[]} monthlyGeneration - Realistic monthly generation in kWh.
  * @returns {object} - { annualCostWithoutSolar, annualCostWithSolar, annualSavings }
  */
 function generateAnnualCostComparisonData(
-  annualConsumptionKwh,
+  monthlyConsumptions,
   distributor,
   rateType,
   department,
-  annualGenerationKwh,
-  numberOfPanels,
-  panelPower,
-  efficiency,
-  monthlyIrradiance
+  monthlyGeneration
 ) {
-  console.log("Generating cost comparison data:");
-  console.log("Annual Consumption (kWh):", annualConsumptionKwh);
-  console.log("Distributor:", distributor);
-  console.log("Rate Type:", rateType);
-  console.log("Department:", department);
-  console.log("Annual Generation (kWh):", annualGenerationKwh);
+  console.log("Generating cost comparison data with realistic data:");
 
   if (
-    isNaN(annualConsumptionKwh) ||
-    !distributor ||
-    !rateType ||
-    !department ||
-    isNaN(annualGenerationKwh) ||
-    !monthlyIrradiance ||
-    monthlyIrradiance.length !== 12
+    !monthlyConsumptions ||
+    !monthlyGeneration ||
+    monthlyConsumptions.length !== 12 ||
+    monthlyGeneration.length !== 12
   ) {
     console.warn("Missing or invalid inputs. Skipping calculation.");
     return {
@@ -107,28 +91,13 @@ function generateAnnualCostComparisonData(
     };
   }
 
-  // Generate realistic monthly consumption (±5% variation)
-  const monthlyConsumptions = generateRealisticMonthlyData(annualConsumptionKwh, 0.05);
-
   // Calculate monthly bills without solar
   const monthlyBillsWithoutSolar = monthlyConsumptions.map(monthlyKwh => {
-    const bill = calculateMonthlyBill(
-      monthlyKwh,
-      distributor,
-      rateType,
-      department
-    );
-    if (isNaN(bill)) {
-      console.warn("calculateMonthlyBill returned NaN for monthlyKwh:", monthlyKwh);
-      return 0;
-    }
-    return bill;
+    const bill = calculateMonthlyBill(monthlyKwh, distributor, rateType, department);
+    return isNaN(bill) ? 0 : bill;
   });
 
   const annualCostWithoutSolar = monthlyBillsWithoutSolar.reduce((sum, val) => sum + val, 0);
-
-  // Calculate monthly generation using monthly irradiance
-  const monthlyGeneration = generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, monthlyIrradiance);
 
   // Calculate net consumption per month
   const netMonthlyConsumptions = monthlyConsumptions.map((consumption, index) => {
@@ -138,17 +107,8 @@ function generateAnnualCostComparisonData(
 
   // Calculate monthly bills with solar
   const monthlyBillsWithSolar = netMonthlyConsumptions.map(monthlyKwh => {
-    const bill = calculateMonthlyBill(
-      monthlyKwh,
-      distributor,
-      rateType,
-      department
-    );
-    if (isNaN(bill)) {
-      console.warn("calculateMonthlyBill returned NaN for netMonthlyKwh:", monthlyKwh);
-      return 0;
-    }
-    return bill;
+    const bill = calculateMonthlyBill(monthlyKwh, distributor, rateType, department);
+    return isNaN(bill) ? 0 : bill;
   });
 
   const annualCostWithSolar = monthlyBillsWithSolar.reduce((sum, val) => sum + val, 0);
@@ -165,5 +125,3 @@ function generateAnnualCostComparisonData(
     annualSavings: parseFloat(annualSavings.toFixed(2))
   };
 }
-
-

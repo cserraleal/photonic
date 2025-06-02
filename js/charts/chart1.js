@@ -3,36 +3,30 @@
 let chart1Instance = null;
 
 /**
- * Core logic that renders the chart.
+ * Core logic that renders Chart 1 using realistic data from latestResults.
  */
-async function drawChart1(numberOfPanels, panelPower, efficiency, averageMonthlyConsumption, department) {
+async function drawChart1() {
   const ctx = document.getElementById("chart1").getContext("2d");
 
+  // STEP 1: Define month labels
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  let monthlyIrradiance = [];
-  try {
-    const response = await fetch("data/irradiance_monthly.json");
-    const data = await response.json();
-    monthlyIrradiance = data[department];
+  // STEP 2: Use realistic data from latestResults
+  const generationData = latestResults.realisticMonthlyGeneration;
+  const consumptionData = latestResults.realisticMonthlyConsumptions;
 
-    if (!monthlyIrradiance || monthlyIrradiance.length !== 12) {
-      throw new Error("Missing or invalid irradiance data for department: " + department);
-    }
-  } catch (err) {
-    console.error("Failed to load monthly irradiance:", err);
+  if (!generationData || !consumptionData) {
+    console.error("Missing realistic data for Chart 1.");
     return;
   }
 
-  const generationData = generateMonthlyGeneration(numberOfPanels, panelPower, efficiency, monthlyIrradiance);
-  const annualConsumption = averageMonthlyConsumption * 12;
-  const consumptionData = generateRealisticMonthlyData(annualConsumption, 0.05);
-
+  // STEP 3: Destroy previous instance if exists
   if (chart1Instance) {
     chart1Instance.destroy();
   }
 
+  // STEP 4: Create the bar chart
   chart1Instance = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -44,7 +38,7 @@ async function drawChart1(numberOfPanels, panelPower, efficiency, averageMonthly
           backgroundColor: "#FFBF41"
         },
         {
-          label: "User Avg. Consumption (kWh)",
+          label: "User Consumption (kWh)",
           data: consumptionData,
           backgroundColor: "#0B284C"
         }
@@ -75,11 +69,5 @@ async function drawChart1(numberOfPanels, panelPower, efficiency, averageMonthly
  * Global function exposed to chart-switcher.
  */
 window.renderChart1 = async function () {
-  await drawChart1(
-    latestResults.numberOfPanels,
-    PANEL_POWER_KW,
-    SYSTEM_EFFICIENCY,
-    latestResults.averageMonthlyConsumption,
-    latestResults.department
-  );
+  await drawChart1();
 };

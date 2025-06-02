@@ -1,19 +1,15 @@
 // chart3.js
 
-// Variable to hold the Chart.js instance so we can destroy it before redrawing
 let chart3Instance = null;
 
 /**
  * Draws Chart 3: Annual Solar Generation vs. Annual User Consumption with realistic variations.
- * @param {number} annualGeneration - kWh per year
- * @param {number} annualConsumption - kWh per year
- * @param {number} systemLifetimeYears - Lifetime of the system in years
+ * Uses realistic values from latestResults for consistency.
  */
 async function drawChart3(annualGeneration, annualConsumption, systemLifetimeYears) {
-  // Get the chart canvas context
   const ctx = document.getElementById("chart3").getContext("2d");
 
-  // Destroy previous instance if it exists
+  // Destroy previous instance if exists
   if (chart3Instance) {
     chart3Instance.destroy();
   }
@@ -80,13 +76,14 @@ async function drawChart3(annualGeneration, annualConsumption, systemLifetimeYea
 }
 
 /**
- * Global function exposed to chart-switcher
+ * Global function exposed to chart-switcher.
  */
 window.renderChart3 = async function () {
   if (!latestResults) return;
 
-  const annualGeneration = latestResults.annualGeneration;
-  const annualConsumption = latestResults.averageMonthlyConsumption * 12;
+  // Use realistic values from latestResults
+  const annualGeneration = latestResults.realisticAnnualGeneration;
+  const annualConsumption = latestResults.realisticAnnualConsumption;
   const systemLifetimeYears = SYSTEM_LIFETIME_YEARS;
 
   await drawChart3(annualGeneration, annualConsumption, systemLifetimeYears);

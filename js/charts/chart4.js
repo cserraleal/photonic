@@ -1,6 +1,5 @@
 // chart4.js
 
-// Variable to hold the Chart.js instance so we can destroy it before redrawing
 let chart4Instance = null;
 
 /**
@@ -25,19 +24,19 @@ async function drawChart4(annualCostWithoutSolar, annualCostWithSolar, annualSav
       datasets: [
         {
           label: 'Without Solar',
-          data: [annualCostWithoutSolar, null], // First bar only
+          data: [annualCostWithoutSolar, null],
           backgroundColor: '#B0B0B0',
           stack: 'Stack 0'
         },
         {
           label: 'With Solar - Cost',
-          data: [null, annualCostWithSolar], // Second bar only
+          data: [null, annualCostWithSolar],
           backgroundColor: '#B0B0B0',
           stack: 'Stack 1'
         },
         {
           label: 'With Solar - Savings',
-          data: [null, annualSavings], // Second bar only (stacked)
+          data: [null, annualSavings],
           backgroundColor: '#A8E6A3',
           stack: 'Stack 1'
         }
@@ -63,10 +62,7 @@ async function drawChart4(annualCostWithoutSolar, annualCostWithSolar, annualSav
       },
       scales: {
         x: {
-          stacked: true,
-          title: {
-            display: false
-          }
+          stacked: true
         },
         y: {
           stacked: true,
@@ -86,15 +82,14 @@ async function drawChart4(annualCostWithoutSolar, annualCostWithSolar, annualSav
   });
 }
 
-
 /**
- * Global function exposed to chart-switcher
+ * Global function exposed to chart-switcher.
  */
 window.renderChart3 = async function () {
   if (!latestResults) return;
 
-  const annualConsumptionKwh = latestResults.averageMonthlyConsumption * 12;
-  const annualGenerationKwh = latestResults.annualGeneration;
+  const annualConsumptionKwh = latestResults.realisticAnnualConsumption;
+  const annualGenerationKwh = latestResults.realisticAnnualGeneration;
   const distributor = latestResults.distributor;
   const rateType = latestResults.rateType;
   const department = latestResults.department;
@@ -109,21 +104,14 @@ window.renderChart3 = async function () {
       return;
     }
 
-    const {
-      annualCostWithoutSolar,
-      annualCostWithSolar,
-      annualSavings
-    } = generateAnnualCostComparisonData(
-      annualConsumptionKwh,
-      distributor,
-      rateType,
-      department,
-      annualGenerationKwh,
-      latestResults.numberOfPanels,
-      PANEL_POWER_KW,
-      SYSTEM_EFFICIENCY,
-      monthlyIrradiance
-    );
+    const { annualCostWithoutSolar, annualCostWithSolar, annualSavings } =
+      generateAnnualCostComparisonData(
+        latestResults.realisticMonthlyConsumptions,
+        distributor,
+        rateType,
+        department,
+        latestResults.realisticMonthlyGeneration
+      );
 
     await drawChart4(annualCostWithoutSolar, annualCostWithSolar, annualSavings);
 
@@ -131,4 +119,3 @@ window.renderChart3 = async function () {
     console.error("Error loading monthly irradiance:", error);
   }
 };
-
